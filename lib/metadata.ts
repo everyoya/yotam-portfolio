@@ -1,27 +1,8 @@
 import type { Metadata } from "next";
 
-export const siteConfig = {
-  name: "Portfolio",
-  description:
-    "A modern, accessible portfolio template built with Next.js, Tailwind CSS, and TypeScript.",
-  url: "https://example.com",
-  ogImage: "/og-image.png",
-  creator: "@yourhandle",
-  authors: [
-    {
-      name: "Your Name",
-      url: "https://example.com",
-    },
-  ],
-  keywords: [
-    "portfolio",
-    "personal site",
-    "Next.js",
-    "React",
-    "Tailwind CSS",
-    "TypeScript",
-  ],
-} as const;
+import { siteConfig, shouldAllowIndexing } from "./config";
+
+const allowIndexing = shouldAllowIndexing();
 
 export const baseMetadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -31,15 +12,20 @@ export const baseMetadata: Metadata = {
   },
   description: siteConfig.description,
   keywords: [...siteConfig.keywords],
-  authors: [...siteConfig.authors],
+  authors: [
+    {
+      name: siteConfig.name,
+      url: siteConfig.url,
+    },
+  ],
   creator: siteConfig.creator,
   publisher: siteConfig.name,
   robots: {
-    index: true,
-    follow: true,
+    index: allowIndexing,
+    follow: allowIndexing,
     googleBot: {
-      index: true,
-      follow: true,
+      index: allowIndexing,
+      follow: allowIndexing,
       "max-video-preview": -1,
       "max-image-preview": "large",
       "max-snippet": -1,
@@ -94,6 +80,7 @@ export function createMetadata({
 }): Metadata {
   const url = `${siteConfig.url}${path}`;
   const ogImage = image ?? siteConfig.ogImage;
+  const indexable = allowIndexing && !noIndex;
 
   return {
     title,
@@ -119,11 +106,11 @@ export function createMetadata({
       description: description ?? siteConfig.description,
       images: [ogImage],
     },
-    ...(noIndex && {
-      robots: {
-        index: false,
-        follow: false,
-      },
-    }),
+    robots: {
+      index: indexable,
+      follow: indexable,
+    },
   };
 }
+
+export { siteConfig };

@@ -6,10 +6,6 @@ import { useTheme } from "next-themes";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
   useSyncExternalStore,
   type ReactNode,
 } from "react";
@@ -113,13 +109,6 @@ function NavThemeToggle(): ReactNode {
 
 export function Nav(): ReactNode {
   const pathname = usePathname();
-  const listRef = useRef<HTMLUListElement>(null);
-  const itemRefs = useRef<Array<HTMLLIElement | null>>([]);
-  const [pillRect, setPillRect] = useState<{
-    x: number;
-    width: number;
-  } | null>(null);
-  const [hasMeasured, setHasMeasured] = useState(false);
 
   const activeIndex = NAV_ITEMS.findIndex((item) =>
     item.href === "/"
@@ -127,59 +116,25 @@ export function Nav(): ReactNode {
       : pathname === item.href || pathname.startsWith(`${item.href}/`)
   );
 
-  useLayoutEffect(() => {
-    const list = listRef.current;
-    const activeEl =
-      activeIndex >= 0 ? itemRefs.current[activeIndex] : null;
-    if (!list || !activeEl) {
-      setPillRect(null);
-      return;
-    }
-    const listRect = list.getBoundingClientRect();
-    const itemRect = activeEl.getBoundingClientRect();
-    setPillRect({
-      x: itemRect.left - listRect.left,
-      width: itemRect.width,
-    });
-  }, [activeIndex, pathname]);
-
-  useEffect(() => {
-    if (!pillRect) return;
-    const id = requestAnimationFrame(() => setHasMeasured(true));
-    return () => cancelAnimationFrame(id);
-  }, [pillRect]);
-
   return (
     <nav
       aria-label="Primary"
       className="fixed left-1/2 top-6 z-50 -translate-x-1/2"
     >
       <div className="flex items-center gap-1 rounded-full bg-background p-1.5 shadow-sm border border-foreground/8">
-        <ul ref={listRef} className="relative flex items-center gap-1">
-          {pillRect && (
-            <motion.span
-              aria-hidden="true"
-              initial={false}
-              animate={{ x: pillRect.x, width: pillRect.width }}
-              transition={
-                hasMeasured
-                  ? { type: "spring", stiffness: 380, damping: 32 }
-                  : { duration: 0 }
-              }
-              style={{ left: 0, top: 0, bottom: 0 }}
-              className="absolute rounded-full bg-foreground/5 ring-1 ring-foreground/8"
-            />
-          )}
+        <ul className="relative flex items-center gap-1">
           {NAV_ITEMS.map((item, index) => {
             const isActive = index === activeIndex;
             return (
-              <li
-                key={item.href}
-                ref={(el) => {
-                  itemRefs.current[index] = el;
-                }}
-                className="relative"
-              >
+              <li key={item.href} className="relative">
+                {isActive ? (
+                  <motion.span
+                    layoutId="nav-pill"
+                    aria-hidden="true"
+                    transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                    className="absolute inset-0 rounded-full bg-foreground/5 ring-1 ring-foreground/8"
+                  />
+                ) : null}
                 <Link
                   href={item.href}
                   aria-current={isActive ? "page" : undefined}

@@ -2,16 +2,18 @@
 
 import { useEffect, type ReactNode } from "react";
 import Lenis from "lenis";
+
 import { features } from "@/lib/config";
 
 const LENIS_OPTIONS = {
-  duration: 1.6,
-  easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+  duration: 1.05,
+  easing: (t: number) => 1 - Math.pow(1 - t, 3),
   orientation: "vertical" as const,
   gestureOrientation: "vertical" as const,
   smoothWheel: true,
-  wheelMultiplier: 1,
-  touchMultiplier: 2,
+  wheelMultiplier: 0.9,
+  touchMultiplier: 1.15,
+  syncTouch: false,
 };
 
 export function SmoothScroll({
@@ -29,13 +31,14 @@ export function SmoothScroll({
     if (prefersReducedMotion) return;
 
     const lenis = new Lenis(LENIS_OPTIONS);
+    let frameId = 0;
 
     function raf(time: number): void {
       lenis.raf(time);
-      requestAnimationFrame(raf);
+      frameId = window.requestAnimationFrame(raf);
     }
 
-    const rafId = requestAnimationFrame(raf);
+    frameId = window.requestAnimationFrame(raf);
 
     function handleAnchorClick(e: MouseEvent): void {
       const target = e.target as HTMLElement;
@@ -49,14 +52,17 @@ export function SmoothScroll({
       if (!element) return;
 
       e.preventDefault();
-      lenis.scrollTo(element as HTMLElement, { offset: -100 });
+      lenis.scrollTo(element as HTMLElement, {
+        offset: -100,
+        duration: 0.9,
+      });
     }
 
     document.addEventListener("click", handleAnchorClick);
 
     return () => {
       document.removeEventListener("click", handleAnchorClick);
-      cancelAnimationFrame(rafId);
+      window.cancelAnimationFrame(frameId);
       lenis.destroy();
     };
   }, []);

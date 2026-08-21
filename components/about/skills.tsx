@@ -1,15 +1,16 @@
 import type { ReactNode } from "react";
 
 const SKILLS = [
-  "UI/UX Design",
-  "Design Systems",
-  "Prototyping & Motion",
-  "Frontend Development",
-  "TypeScript & React",
-  "Interaction Design",
-  "Performance Tuning",
-  "Accessibility",
-  "Visual Identity",
+  "Product Education",
+  "Go-to-Market Strategy",
+  "Content & Storytelling",
+  "Community Building",
+  "Product Positioning",
+  "User Onboarding",
+  "Data Storytelling",
+  "Social Strategy",
+  "User Research",
+  "AI-Assisted Building",
 ];
 
 export function Skills(): ReactNode {
@@ -18,7 +19,7 @@ export function Skills(): ReactNode {
       <h3 className="text-[15px] font-semibold tracking-tight text-foreground">
         What I do
       </h3>
-      <div className="rounded-4xl border border-foreground/5 bg-foreground/2 p-2 sm:p-4 dark:bg-foreground/5">
+      <div className="rounded-4xl border border-foreground/5 bg-foreground/2 p-2 dark:bg-foreground/5 sm:p-4">
         <div className="flex flex-wrap gap-3">
           {SKILLS.map((skill) => (
             <span

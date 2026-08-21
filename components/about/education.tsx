@@ -1,27 +1,28 @@
+import Image from "next/image";
 import type { ReactNode } from "react";
 
 type Entry = {
   school: string;
   degree: string;
   period: string;
-  slug?: string;
+  logoUrl: string;
+  logoAlt: string;
 };
 
 const ENTRIES: Entry[] = [
   {
-    school: "Rhode Island School of Design",
-    degree: "BFA, Graphic Design",
-    period: "2013 – 2017",
+    school: "Reichman University",
+    degree: "B.A. Business Administration & Entrepreneurship",
+    period: "2020 – 2023",
+    logoUrl: "/education/reichman-university.png",
+    logoAlt: "Reichman University logo",
   },
   {
-    school: "Stanford University",
-    degree: "HCI Certificate, d.school",
-    period: "2018",
-  },
-  {
-    school: "Bruno Simon's Three.js Journey",
-    degree: "WebGL & Shaders",
-    period: "2022",
+    school: "EDEM Business School (Student Exchange - Valencia, Spain)",
+    degree: "Business & Entrepreneurship Exchange Program",
+    period: "2022 – 2023",
+    logoUrl: "/education/edem-business-school.png",
+    logoAlt: "EDEM Business School logo",
   },
 ];
 
@@ -33,7 +34,7 @@ export function Education(): ReactNode {
       <h3 className="text-foreground text-[15px] font-semibold tracking-tight">
         Education
       </h3>
-      <div className="border-foreground/5 bg-foreground/2 dark:bg-foreground/5 relative rounded-4xl border p-2 sm:p-4">
+      <div className="border-foreground/5 bg-foreground/2 relative rounded-4xl border p-2 dark:bg-foreground/5 sm:p-4">
         <ul className="flex flex-col gap-2">
           {ENTRIES.map((entry) => (
             <li
@@ -61,27 +62,19 @@ export function Education(): ReactNode {
 }
 
 function SchoolLogo({ entry }: { entry: Entry }): ReactNode {
-  const initials = entry.school.charAt(0);
   return (
     <span
-      className="border-foreground/15 inline-flex h-12 w-12 shrink-0 items-center justify-center border"
+      className="border-foreground/15 bg-background inline-flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden border p-1"
       aria-hidden="true"
       style={{ borderRadius: 14 }}
     >
-      {entry.slug ? (
-        <img
-          src={`https://cdn.simpleicons.org/${entry.slug}`}
-          alt=""
-          width={24}
-          height={24}
-          className="h-6 w-6"
-          draggable={false}
-        />
-      ) : (
-        <span className="text-foreground/60 text-[18px] font-semibold tracking-tight">
-          {initials}
-        </span>
-      )}
+      <Image
+        src={entry.logoUrl}
+        alt={entry.logoAlt}
+        width={40}
+        height={40}
+        className="h-full w-full object-contain"
+      />
     </span>
   );
 }

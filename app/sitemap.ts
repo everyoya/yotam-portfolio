@@ -1,12 +1,15 @@
 import type { MetadataRoute } from "next";
-import { siteConfig } from "@/lib/metadata";
+
+import { siteConfig, shouldAllowIndexing } from "@/lib/config";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = siteConfig.url;
+  if (!shouldAllowIndexing()) {
+    return [];
+  }
 
   return [
     {
-      url: baseUrl,
+      url: siteConfig.url,
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 1,

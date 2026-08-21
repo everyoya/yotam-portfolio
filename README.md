@@ -13,7 +13,7 @@ A Next.js 16+ personal portfolio template built around a signature WebGL flow sh
 - ✅ **Lenis Smooth Scroll** with anchor-link integration
 - ✅ **Portrait Morph** — hover-driven webp swap with magnetic cursor follow
 - ✅ **Polaroid Strip, Skills, Stack, Experience, Education** — co-located content sections for an `/about` route
-- ✅ **Projects Grid** — dribbble-style mockup cards with hover lift and image zoom
+- ✅ **Projects Grid** — clean mockup cards with hover lift and image zoom
 - ✅ **Contact Card** — single-click copy email with hover content swap, embedded shader
 - ✅ **Animated Pill Nav** — spring-animated active indicator, hydration-safe theme toggle
 - ✅ **Site Frame** — fixed top/left/right rails with rounded inner corners
@@ -25,7 +25,7 @@ A Next.js 16+ personal portfolio template built around a signature WebGL flow sh
 
 - **Nav** — Fixed pill nav with spring-animated active indicator and hydration-safe theme toggle
 - **Hero** — WebGL flow shader backdrop, two-line headline, morphing portrait, magnetic CTAs
-- **Projects** — Grid of dribbble-style project cards with hover lift, image zoom, and external links
+- **Projects** — Grid of project cards with hover lift, image zoom, and space for your own work
 - **About** — Polaroid strip, skills grid, interactive Matter.js stack chips, expandable experience timeline, education list
 - **Contact Card** — Embedded shader, copy-to-clipboard email, secondary social CTAs
 - **Page Backdrop** — Site-wide flow shader, mobile-attenuated, baked radial fade to background
@@ -38,6 +38,17 @@ A Next.js 16+ personal portfolio template built around a signature WebGL flow sh
 ```bash
 npm install
 ```
+
+### Create local config
+
+```bash
+cp .env.example .env.local
+```
+
+Then update `.env.local` with your real name, domain, email, and social links.
+
+- `NEXT_PUBLIC_ALLOW_INDEXING` defaults to `false` for safety.
+- Only change it to `true` after you replace the placeholder values and are ready for search engines to index the site.
 
 ### Run development server
 
@@ -106,8 +117,9 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 │   ├── metadata.ts                  # SEO metadata utilities
 │   └── motion.tsx                   # Motion components & hooks
 └── public/
-    ├── josh.webp                    # Default portrait
-    ├── josh_wave.webp               # Hover portrait
+    ├── portrait-default.webp        # Default portrait
+    ├── portrait-hover.webp          # Hover portrait
+    ├── project-placeholder.svg      # Neutral project placeholder
     ├── linkedin.svg                 # Social icon
     ├── x.svg                        # Social icon
     └── site.webmanifest             # PWA manifest
@@ -117,16 +129,25 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ### 1. Update Site Configuration
 
-Edit `lib/metadata.ts` to update:
-- Site name, description, and URL
-- Social media handles
-- Keywords and authors
+The fastest safe path is to fill out `.env.local`:
 
-The default `siteConfig.url` is `https://example.com` — replace it with your production URL before deploying so OpenGraph and the sitemap emit correct absolute URLs.
+- `NEXT_PUBLIC_SITE_NAME`
+- `NEXT_PUBLIC_SITE_DESCRIPTION`
+- `NEXT_PUBLIC_SITE_URL`
+- `NEXT_PUBLIC_SITE_CREATOR`
+- `NEXT_PUBLIC_CONTACT_EMAIL`
+- `NEXT_PUBLIC_LINKEDIN_URL`
+- `NEXT_PUBLIC_X_URL`
+- `NEXT_PUBLIC_OG_IMAGE`
+- `NEXT_PUBLIC_ALLOW_INDEXING`
+
+These values now drive metadata, robots, sitemap, and contact/social links from one place.
+
+`NEXT_PUBLIC_ALLOW_INDEXING` should stay `false` until your real domain is live and the placeholder content is gone.
 
 ### 2. Replace Brand & Portrait
 
-- Swap `public/josh.webp` and `public/josh_wave.webp` with your own default + hover portraits. Keep both files the same dimensions and aspect ratio for a clean morph.
+- Swap `public/portrait-default.webp` and `public/portrait-hover.webp` with your own default + hover portraits. Keep both files the same dimensions and aspect ratio for a clean morph.
 - Update headline, eyebrow, and subtitle copy in `components/hero/hero.tsx`.
 - Update social handles and email in `components/contact/contact-card.tsx` and `components/contact/contact-card-ctas.tsx`.
 
@@ -142,7 +163,9 @@ All about-page content is co-located in its component file — there is no separ
 
 ### 4. Update Projects
 
-Edit the project array in `components/projects/projects.tsx`. Each entry includes a title, description, image (dribbble mockup or your own), and external link.
+Edit the project array in `components/projects/projects.tsx`. Each entry includes a title, description, local image, and project summary.
+
+> Safety note: the bundled project cards now use a neutral local placeholder image. Replace it with your own screenshots or case-study visuals before publishing.
 
 ### 5. Replace Icons
 
@@ -236,9 +259,10 @@ The template includes:
 
 ## Notes
 
-- The `next.config.ts` `images.remotePatterns` allows `images.unsplash.com` and `cdn.dribbble.com` for the polaroid and project mockups respectively.
+- The `next.config.ts` `images.remotePatterns` allows `images.unsplash.com` for the polaroid strip.
 - The portfolio uses a single `@/` path alias.
-- The project image cards use a disclaimer comment at the top of `components/projects/projects.tsx` noting that dribbble mockups are placeholders to be replaced with your own work.
+- The project image cards now use a local placeholder so no third-party demo work appears by default.
+- Search indexing is disabled by default until you explicitly opt in with `NEXT_PUBLIC_ALLOW_INDEXING=true`.
 
 ## License
 

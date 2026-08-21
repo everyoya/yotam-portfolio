@@ -9,25 +9,68 @@ type Chip = {
   bg: string;
   fg: string;
   iconUrl?: string;
+  iconScale?: number;
+  iconBg?: string;
+  hideLabel?: boolean;
 };
 
 const CHIPS: Chip[] = [
+  { label: "Claude", slug: "claude", bg: "#D97757", fg: "#ffffff" },
+  {
+    label: "Codex",
+    slug: "openai",
+    bg: "#111111",
+    fg: "#ffffff",
+    iconUrl: "/logos/codex.png",
+    iconScale: 1.22,
+  },
+  {
+    label: "Hermes",
+    slug: "robotframework",
+    bg: "#0000F2",
+    fg: "#ffffff",
+    iconUrl: "/logos/hermes.png",
+    iconScale: 1.08,
+  },
+  {
+    label: "Base44",
+    slug: "appsmith",
+    bg: "#FE6A00",
+    fg: "#ffffff",
+    iconUrl: "/logos/base44.png",
+  },
+  {
+    label: "Pencil",
+    slug: "procreate",
+    bg: "#111111",
+    fg: "#ffffff",
+    iconUrl: "/logos/pencil.png",
+  },
   {
     label: "Figma",
     slug: "figma",
-    bg: "#1f1f1f",
+    bg: "#4D49FC",
     fg: "#ffffff",
-    iconUrl: "https://svgl.app/library/figma.svg",
+    iconUrl: "/logos/figma-custom.png",
+    iconBg: "#ffffff",
+    iconScale: 1.34,
   },
-  { label: "React", slug: "react", bg: "#1FB6CB", fg: "#ffffff" },
-  { label: "Next.js", slug: "nextdotjs", bg: "#1f1f1f", fg: "#ffffff" },
-  { label: "TypeScript", slug: "typescript", bg: "#2F74C0", fg: "#ffffff" },
-  { label: "shadcn/ui", slug: "shadcnui", bg: "#5b54ff", fg: "#ffffff" },
-  { label: "Cursor", slug: "cursor", bg: "#111111", fg: "#ffffff" },
-  { label: "GSAP", slug: "gsap", bg: "#0AE448", fg: "#0a0a0a" },
   { label: "GitHub", slug: "github", bg: "#181717", fg: "#ffffff" },
-  { label: "Vercel", slug: "vercel", bg: "#0a0a0a", fg: "#ffffff" },
-  { label: "Tailwind CSS", slug: "tailwindcss", bg: "#2BBCF5", fg: "#ffffff" },
+  {
+    label: "Dune",
+    slug: "databricks",
+    bg: "#F4603E",
+    fg: "#ffffff",
+    iconUrl: "/logos/dune.png",
+  },
+  {
+    label: "X",
+    slug: "x",
+    bg: "#111111",
+    fg: "#ffffff",
+    hideLabel: true,
+  },
+  { label: "Discord", slug: "discord", bg: "#5865F2", fg: "#ffffff" },
 ];
 
 const CHIP_RADIUS = 14;
@@ -223,7 +266,7 @@ export function Stack(): ReactNode {
           type="button"
           onClick={() => setResetKey((k) => k + 1)}
           aria-label="Reset stack"
-          className="focus-ring border-foreground/8 bg-background text-foreground/70 hover:text-foreground absolute top-3 right-3 z-20 inline-flex h-9 w-9 items-center justify-center rounded-xl border transition-colors"
+          className="focus-ring border-foreground/8 bg-background text-foreground/70 hover:text-foreground absolute right-3 top-3 z-20 inline-flex h-9 w-9 items-center justify-center rounded-xl border transition-colors"
         >
           <RotateCcw
             className="h-4 w-4"
@@ -235,7 +278,7 @@ export function Stack(): ReactNode {
         <div
           ref={measureRef}
           aria-hidden="true"
-          className="pointer-events-none invisible absolute top-0 left-0 flex flex-wrap gap-2"
+          className="pointer-events-none invisible absolute left-0 top-0 flex flex-wrap gap-2"
         >
           {CHIPS.map((chip) => (
             <ChipPill key={`m-${chip.label}`} chip={chip} />
@@ -254,7 +297,7 @@ export function Stack(): ReactNode {
                 chipRefs.current[i] = el;
               }}
               data-stack-chip
-              className="pointer-events-none absolute top-0 left-0 will-change-transform"
+              className="pointer-events-none absolute left-0 top-0 will-change-transform"
               style={{ transform: "translate3d(-9999px, -9999px, 0)" }}
             >
               <ChipPill chip={chip} />
@@ -269,16 +312,20 @@ export function Stack(): ReactNode {
 function ChipPill({ chip }: { chip: Chip }): ReactNode {
   return (
     <div
-      className="dark:ring-1 dark:ring-white/15 inline-flex items-center gap-2 p-1 pr-2 text-[15px] font-medium tracking-tight sm:text-[16px]"
+      className="dark:ring-1 dark:ring-white/15 inline-flex items-center gap-2 p-1 text-[15px] font-medium tracking-tight sm:text-[16px]"
       style={{
         backgroundColor: chip.bg,
         color: chip.fg,
         borderRadius: `${CHIP_RADIUS}px`,
+        paddingRight: chip.hideLabel ? '0.25rem' : '0.5rem',
       }}
     >
       <span
-        className="inline-flex h-8 w-8 items-center justify-center bg-white/95"
-        style={{ borderRadius: `${ICON_RADIUS}px` }}
+        className="inline-flex h-8 w-8 items-center justify-center"
+        style={{
+          borderRadius: `${ICON_RADIUS}px`,
+          backgroundColor: chip.iconBg ?? 'rgba(255,255,255,0.95)',
+        }}
         aria-hidden="true"
       >
         <img
@@ -286,11 +333,12 @@ function ChipPill({ chip }: { chip: Chip }): ReactNode {
           alt=""
           width={18}
           height={18}
-          className="h-5 w-5"
+          className="h-5 w-5 object-contain"
+          style={{ transform: `scale(${chip.iconScale ?? 1})` }}
           draggable={false}
         />
       </span>
-      <span>{chip.label}</span>
+      {chip.hideLabel ? null : <span>{chip.label}</span>}
     </div>
   );
 }

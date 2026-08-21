@@ -5,21 +5,23 @@ import { Check, Copy, Mail } from "lucide-react";
 import { useState } from "react";
 import type { ReactNode } from "react";
 
-const EMAIL = "hello@example.com";
+import { siteConfig } from "@/lib/config";
+
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 export function ContactButton(): ReactNode {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const email = siteConfig.email;
 
   const handleCopy = async (): Promise<void> => {
     try {
-      await navigator.clipboard.writeText(EMAIL);
+      await navigator.clipboard.writeText(email);
       setCopied(true);
       window.setTimeout(() => setCopied(false), 1600);
     } catch {
       const ta = document.createElement("textarea");
-      ta.value = EMAIL;
+      ta.value = email;
       ta.style.position = "fixed";
       ta.style.opacity = "0";
       document.body.appendChild(ta);
@@ -42,9 +44,7 @@ export function ContactButton(): ReactNode {
       onHoverEnd={() => setOpen(false)}
       onFocus={() => setOpen(true)}
       onBlur={() => setOpen(false)}
-      aria-label={
-        copied ? "Email copied" : open ? `Copy ${EMAIL}` : "Show email"
-      }
+      aria-label={copied ? "Email copied" : open ? `Copy ${email}` : "Show email"}
       transition={{ layout: { duration: 0.55, ease: EASE } }}
       style={{ borderRadius: 12 }}
       className="focus-ring relative inline-flex h-11 cursor-pointer items-center justify-center bg-foreground px-5 text-sm font-medium text-background"
@@ -91,7 +91,7 @@ export function ContactButton(): ReactNode {
                   )}
                 </AnimatePresence>
               </span>
-              <span className="tabular-nums">{EMAIL}</span>
+              <span className="tabular-nums">{email}</span>
             </motion.span>
           ) : (
             <motion.span

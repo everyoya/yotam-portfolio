@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { ChevronDown } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState, type ReactNode } from "react";
@@ -8,63 +9,85 @@ type Entry = {
   company: string;
   role: string;
   period: string;
-  slug?: string;
-  brand?: string;
+  description: string;
+  brand: string;
+  logoUrl: string;
+  logoAlt: string;
+  logoScale?: number;
+  logoPadding?: string;
+  logoBackground?: string;
 };
 
 const ENTRIES: Entry[] = [
   {
-    company: "Linear",
-    role: "Senior Design Engineer",
-    period: "Mar 2024 – Present",
-    slug: "linear",
-    brand: "#5E6AD2",
-  },
-  {
-    company: "Vercel",
-    role: "Product Designer",
-    period: "Aug 2022 – Feb 2024",
-    slug: "vercel",
-    brand: "#0a0a0a",
-  },
-  {
-    company: "Stripe",
-    role: "Design Engineer",
-    period: "Jun 2021 – Jul 2022",
-    slug: "stripe",
-    brand: "#635BFF",
-  },
-  {
-    company: "Figma",
-    role: "UI Engineer",
-    period: "Sep 2019 – May 2021",
-    slug: "figma",
-    brand: "#A259FF",
-  },
-  {
-    company: "Notion",
-    role: "Product Designer",
-    period: "Jan 2018 – Aug 2019",
-    slug: "notion",
+    company: "Entropy Advisors",
+    role: "Governance & Socials",
+    period: "Jan 2025 – Dec 2025",
+    description:
+      "Led Social and Content Strategy for data-driven content, turning complex onchain insights into stories people engaged with and shared.",
     brand: "#111111",
+    logoUrl: "/logos/entropy-advisors.png",
+    logoAlt: "Entropy Advisors logo",
+    logoScale: 0.92,
+    logoPadding: "0.32rem",
+    logoBackground: "#111111",
   },
   {
-    company: "Airbnb",
-    role: "Design Intern",
-    period: "May 2017 – Dec 2017",
-    slug: "airbnb",
-    brand: "#FF5A5F",
+    company: "HODL Capital",
+    role: "Crypto Research Analyst",
+    period: "Nov 2023 – Jan 2025",
+    description:
+      "Researched crypto products and protocols, translating complex data and market insights into clear investment research.",
+    brand: "#2563EB",
+    logoUrl: "/logos/hodl-capital.png",
+    logoAlt: "HODL Capital logo",
+    logoScale: 1.12,
+    logoPadding: "0.12rem",
+    logoBackground: "#ffffff",
   },
   {
-    company: "Freelance",
-    role: "Designer & Developer",
-    period: "2015 – 2017",
-    brand: "#0AE448",
+    company: "Chippy’s World",
+    role: "Community & Business Development",
+    period: "2021 – 2023",
+    description:
+      "Helped build and grow a Web3 community through member engagement and community-led initiatives.",
+    brand: "#ffffff",
+    logoUrl: "/logos/chippys-world.png",
+    logoAlt: "Chippy's World logo",
+    logoScale: 1.08,
+    logoPadding: "0rem",
+    logoBackground: "#ffffff",
+  },
+  {
+    company: "DEEP",
+    role: "Web3 Product Lead",
+    period: "Jan 2022 – Nov 2022",
+    description:
+      "Led product design and GTM for an AI-powered data visualization tool, shaping how it was positioned for users and partners.",
+    brand: "#0F766E",
+    logoUrl: "/logos/deep.png",
+    logoAlt: "DEEP logo",
+    logoScale: 0.92,
+    logoPadding: "0.3rem",
+    logoBackground: "#101818",
+  },
+  {
+    company: "Strauss Group",
+    role: "Sales Agent",
+    period: "Jan 2020 – Jun 2020",
+    description:
+      "Worked in outbound sales, converting cold and warm leads through clear communication and persistence.",
+    brand: "#ffffff",
+    logoUrl: "/logos/strauss-group.png",
+    logoAlt: "Strauss Group logo",
+    logoScale: 0.9,
+    logoPadding: "0.25rem",
+    logoBackground: "#ffffff",
   },
 ];
 
 const COLLAPSED_COUNT = 2.5;
-const ROW_HEIGHT = 64;
+const ROW_HEIGHT = 96;
 const ROW_GAP = 8;
 
 export function Experience(): ReactNode {
@@ -81,9 +104,8 @@ export function Experience(): ReactNode {
         Experience
       </h3>
       <div
-        className={`border-foreground/5 bg-foreground/2 dark:bg-foreground/5 relative overflow-hidden rounded-4xl border px-2 pt-2 sm:px-4 sm:pt-4 ${
-          open ? "pb-2 sm:pb-4" : "pb-0"
-        }`}
+        className={`border-foreground/5 bg-foreground/2 dark:bg-foreground/5 relative overflow-hidden rounded-4xl border px-2 pt-2 sm:px-4 sm:pt-4 ${open ? "pb-2 sm:pb-4" : "pb-0"
+          }`}
       >
         <motion.div
           className="relative"
@@ -98,7 +120,7 @@ export function Experience(): ReactNode {
             {ENTRIES.map((entry) => (
               <li
                 key={`${entry.company}-${entry.period}`}
-                className="bg-background border-foreground/5 flex items-center gap-4 rounded-3xl border p-2"
+                className="bg-background border-foreground/5 flex items-start gap-4 rounded-3xl border p-3"
                 style={{ minHeight: ROW_HEIGHT }}
               >
                 <CompanyLogo entry={entry} />
@@ -111,6 +133,9 @@ export function Experience(): ReactNode {
                     <span className="text-foreground/30 mx-2">•</span>
                     <span className="text-foreground/55">{entry.period}</span>
                   </span>
+                  <p className="mt-2 max-w-[48ch] text-[14px] leading-[1.5] tracking-tight text-foreground/65 sm:text-[15px]">
+                    {entry.description}
+                  </p>
                 </div>
               </li>
             ))}
@@ -145,11 +170,10 @@ export function Experience(): ReactNode {
             type="button"
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
-            className={`focus-ring text-foreground flex w-full cursor-pointer items-center justify-center gap-1.5 bg-transparent text-[15px] font-medium tracking-tight ${
-              open
-                ? "relative mt-4"
-                : "absolute inset-x-0 bottom-0 z-10 py-3 sm:py-4"
-            }`}
+            className={`focus-ring text-foreground flex w-full cursor-pointer items-center justify-center gap-1.5 bg-transparent text-[15px] font-medium tracking-tight ${open
+              ? "relative mt-4"
+              : "absolute inset-x-0 bottom-0 z-10 py-3 sm:py-4"
+              }`}
           >
             {open ? "Show less" : `Show ${hiddenCount} more`}
             <motion.span
@@ -167,30 +191,25 @@ export function Experience(): ReactNode {
 }
 
 function CompanyLogo({ entry }: { entry: Entry }): ReactNode {
-  const initials = entry.company.charAt(0);
   return (
     <span
-      className="ring-foreground/8 inline-flex h-12 w-12 shrink-0 items-center justify-center bg-white ring-1 dark:ring-white/10"
+      className="ring-foreground/8 inline-flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden ring-1"
       aria-hidden="true"
       style={{
         borderRadius: 14,
-        ...(entry.slug ? {} : { backgroundColor: entry.brand }),
+        backgroundColor: entry.logoBackground ?? entry.brand,
+        padding: entry.logoPadding ?? "0.28rem",
       }}
     >
-      {entry.slug ? (
-        <img
-          src={`https://cdn.simpleicons.org/${entry.slug}`}
-          alt=""
-          width={24}
-          height={24}
-          className="h-6 w-6"
-          draggable={false}
-        />
-      ) : (
-        <span className="text-[18px] font-semibold tracking-tight text-white">
-          {initials}
-        </span>
-      )}
+      <Image
+        src={entry.logoUrl}
+        alt={entry.logoAlt}
+        width={48}
+        height={48}
+        className="h-full w-full object-contain"
+        style={{ transform: `scale(${entry.logoScale ?? 1})` }}
+        draggable={false}
+      />
     </span>
   );
 }

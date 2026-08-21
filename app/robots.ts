@@ -1,16 +1,28 @@
 import type { MetadataRoute } from "next";
-import { siteConfig } from "@/lib/metadata";
+
+import { siteConfig, shouldAllowIndexing } from "@/lib/config";
 
 export default function robots(): MetadataRoute.Robots {
-  return {
-    rules: [
-      {
-        userAgent: "*",
-        allow: "/",
-        disallow: ["/api/", "/private/"],
-      },
-    ],
-    sitemap: `${siteConfig.url}/sitemap.xml`,
-    host: siteConfig.url,
-  };
+  const allowIndexing = shouldAllowIndexing();
+
+  return allowIndexing
+    ? {
+        rules: [
+          {
+            userAgent: "*",
+            allow: "/",
+            disallow: ["/api/", "/private/"],
+          },
+        ],
+        sitemap: `${siteConfig.url}/sitemap.xml`,
+        host: siteConfig.url,
+      }
+    : {
+        rules: [
+          {
+            userAgent: "*",
+            disallow: "/",
+          },
+        ],
+      };
 }
