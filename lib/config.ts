@@ -1,4 +1,4 @@
-const DEFAULT_URL = "http://localhost:3000";
+const DEFAULT_URL = "https://yotamharel.com";
 const PLACEHOLDER_HOSTS = new Set(["example.com", "www.example.com", "localhost"]);
 
 function normalizeUrl(value: string | undefined, fallback = DEFAULT_URL): string {
@@ -23,7 +23,7 @@ export const siteConfig = {
     process.env.NEXT_PUBLIC_SITE_DESCRIPTION?.trim() ||
     "I help people understand products, see their value, and become their biggest advocates.",
   url: normalizeUrl(process.env.NEXT_PUBLIC_SITE_URL),
-  ogImage: process.env.NEXT_PUBLIC_OG_IMAGE?.trim() || "/og-image.png",
+  ogImage: process.env.NEXT_PUBLIC_OG_IMAGE?.trim() || "/opengraph-image",
   creator: normalizeCreator(process.env.NEXT_PUBLIC_SITE_CREATOR),
   email: process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim() || "yotam.harel@gmail.com",
   linkedinUrl:
