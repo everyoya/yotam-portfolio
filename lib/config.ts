@@ -5,7 +5,7 @@ function normalizeUrl(value: string | undefined, fallback = DEFAULT_URL): string
   const candidate = value?.trim() || fallback;
   try {
     const url = new URL(candidate);
-    return url.origin;
+    return PLACEHOLDER_HOSTS.has(url.hostname) ? fallback : url.origin;
   } catch {
     return fallback;
   }
@@ -23,7 +23,7 @@ export const siteConfig = {
     process.env.NEXT_PUBLIC_SITE_DESCRIPTION?.trim() ||
     "I help people understand products, see their value, and become their biggest advocates.",
   url: normalizeUrl(process.env.NEXT_PUBLIC_SITE_URL),
-  ogImage: process.env.NEXT_PUBLIC_OG_IMAGE?.trim() || "/opengraph-image",
+  ogImage: "/opengraph-image",
   creator: normalizeCreator(process.env.NEXT_PUBLIC_SITE_CREATOR),
   email: process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim() || "yotam.harel@gmail.com",
   linkedinUrl:
