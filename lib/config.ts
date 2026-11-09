@@ -47,7 +47,7 @@ export const features = {
 };
 
 export function shouldAllowIndexing(): boolean {
-  if (process.env.NEXT_PUBLIC_ALLOW_INDEXING !== "true") {
+  if (process.env.NEXT_PUBLIC_ALLOW_INDEXING?.trim() !== "true") {
     return false;
   }
 
